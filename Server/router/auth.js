@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const otp = require("../models/Otp")
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
-require('../db/conn')
+
 const user = require('../models/userSchema');
 
 

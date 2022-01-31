@@ -1,6 +1,6 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import swal from 'sweetalert';
+import swal from "sweetalert";
 import { UserContext } from "../App";
 import "./login.css";
 import Spinner from "./Spinner";
@@ -38,6 +38,9 @@ const Login = () => {
       History("/");
     }
   };
+  useEffect(() => {
+    document.title = "MERN-Login";
+  });
   // eslint-disable-next-line
   return (
     <>

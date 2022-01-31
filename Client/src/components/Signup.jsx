@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Signup.css";
 import swal from "sweetalert";
 import { useNavigate } from "react-router-dom";
@@ -56,6 +56,9 @@ const Signup = () => {
       History("/login");
     }
   };
+  useEffect(() => {
+    document.title = "MERN-Register";
+  });
   return (
     <>
       <section class="h-100 bg-dark">

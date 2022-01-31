@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import swal from 'sweetalert';
+import swal from "sweetalert";
 import ConfirmedPassword from "./ConfirmedPassword";
 import Spinner from "./Spinner";
 const Changepassword = () => {
@@ -37,6 +37,9 @@ const Changepassword = () => {
       setEmail();
     }
   };
+  useEffect(() => {
+    document.title = "MERN-Forget Password";
+  });
   return (
     <>
       <div class="container padding-bottom-3x mb-2 mt-5">

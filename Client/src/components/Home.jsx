@@ -17,13 +17,11 @@ const Home = () => {
       const data = await res.json();
 
       setUserData(data.name);
-
-    } catch (error) {
-
-    }
+    } catch (error) {}
   };
   useEffect(() => {
     Homepage();
+    document.title = "MERN-Home";
     //eslint-disable-next-line
   }, [userData]);
 

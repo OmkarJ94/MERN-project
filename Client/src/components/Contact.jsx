@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Contact.css";
-import swal from 'sweetalert';
+import swal from "sweetalert";
 const Contact = () => {
   const History = useNavigate();
   const [userData, setUserData] = useState({
@@ -13,7 +13,6 @@ const Contact = () => {
 
   const callContactPage = async () => {
     try {
-     
       const res = await fetch("/getData", {
         method: "GET",
         headers: {
@@ -22,7 +21,7 @@ const Contact = () => {
         },
         credentials: "include",
       });
-     
+
       const data = await res.json();
       setUserData({
         ...userData,
@@ -30,17 +29,17 @@ const Contact = () => {
         email: data.email,
         phone: data.phone,
       });
-      
+
       if (!res.status === 200) {
         swal("error");
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
   useEffect(() => {
-    
     callContactPage();
+    document.title = "MERN-Contact";
     // eslint-disable-next-line
   }, []);
 
@@ -71,7 +70,7 @@ const Contact = () => {
       swal("Invalid Creadentials");
     } else {
       swal("Message Sent");
-      setUserData({...userData,message:""});
+      setUserData({ ...userData, message: "" });
       History("/");
     }
   };

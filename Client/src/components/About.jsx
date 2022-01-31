@@ -41,6 +41,7 @@ const About = () => {
   // eslint-disable-next-line
   useEffect(() => {
     callAboutPage();
+    document.title = "MERN-About";
     // eslint-disable-next-line
   }, []);
   return (
