@@ -1,14 +1,83 @@
 import React, { useEffect, useState } from "react";
 import swal from "sweetalert";
+import Spinner from "./Spinner";
+
 import { useNavigate } from "react-router-dom";
 const About = () => {
+  const History = useNavigate();
   const [userData, setUserData] = useState({
     name: "",
     email: "",
     phone: "",
     Proffesion: "",
+    _id: "",
   });
+
+  const [loading, setLoading] = useState(false);
+  const [updatedData, setUserUpdatedData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    Proffesion: "",
+    _id: "",
+  });
+
   const history = useNavigate();
+  const updateUser = (e) => {
+    let name = e.target.name;
+    let value = e.target.value;
+    setUserUpdatedData({ ...updatedData, [name]: value });
+  };
+
+  const setdata = () => {
+    setUserUpdatedData({
+      name: userData.name,
+      email: userData.email,
+      phone: userData.phone,
+      Proffesion: userData.Proffesion,
+      _id: userData._id,
+    });
+  };
+  const HandleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const { name, email, phone, Proffesion, _id } = updatedData;
+      setLoading(true);
+
+      const res = await fetch(`/updateuser/${_id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          Proffesion,
+        }),
+      });
+      // eslint-disable-next-line
+      const result = await res.json();
+      setLoading(false);
+      if (res.status !== 201 || !res) {
+        swal("Invalid Data");
+        // setUser({
+        //   name: "",
+        //   email: "",
+        //   phone: "",
+        //   work: "",
+        //   password: "",
+        //   cpassword: "",
+        // });
+      } else {
+        swal("Updated succesfully");
+        History("/about");
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   const callAboutPage = async () => {
     try {
       const res = await fetch("/profilepage", {
@@ -21,14 +90,17 @@ const About = () => {
       });
 
       const data = await res.json();
-
+      console.log(data);
       setUserData({
         name: data.name,
         email: data.email,
         phone: data.phone,
         Proffesion: data.work,
+        _id: data._id,
       });
+      console.log(userData);
 
+      console.log(updatedData);
       if (!res.status === 200) {
         swal("error");
       }
@@ -43,7 +115,7 @@ const About = () => {
     callAboutPage();
     document.title = "MERN-About";
     // eslint-disable-next-line
-  }, []);
+  });
   return (
     <div>
       <div class="container mt-5">
@@ -144,6 +216,96 @@ const About = () => {
                           cursor: "default",
                         }}
                       />
+
+                      <button
+                        type="button"
+                        class="btn btn-primary my-5"
+                        data-bs-toggle="modal"
+                        data-bs-target="#exampleModal"
+                        onClick={() => {
+                          setdata();
+                        }}
+                      >
+                        Edit
+                      </button>
+
+                      <div
+                        class="modal fade"
+                        id="exampleModal"
+                        tabindex="-1"
+                        aria-labelledby="exampleModalLabel"
+                        aria-hidden="true"
+                      >
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel">
+                                Edit Information
+                              </h5>
+                              <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                              ></button>
+                            </div>
+                            <div class="modal-body">
+                              <div class="input-group mb-3">
+                                <input
+                                  type="text"
+                                  name="name"
+                                  class="form-control"
+                                  value={updatedData.name}
+                                  onChange={updateUser}
+                                />
+                              </div>
+                              <div class="input-group mb-3">
+                                <input
+                                  type="text"
+                                  name="email"
+                                  class="form-control"
+                                  onChange={updateUser}
+                                  value={updatedData.email}
+                                />
+                              </div>
+                              <div class="input-group mb-3">
+                                <input
+                                  type="text"
+                                  name="phone"
+                                  class="form-control"
+                                  onChange={updateUser}
+                                  value={updatedData.phone}
+                                />
+                              </div>
+                              <div class="input-group mb-3">
+                                <input
+                                  type="text"
+                                  name="Proffesion"
+                                  class="form-control"
+                                  onChange={updateUser}
+                                  value={updatedData.Proffesion}
+                                />
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal"
+                              >
+                                Close
+                              </button>
+                              <button
+                                type="button"
+                                class="btn btn-primary"
+                                onClick={HandleSubmit}
+                              >
+                                Save changes
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

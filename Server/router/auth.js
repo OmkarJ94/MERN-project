@@ -197,6 +197,21 @@ router.post("/update", async (req, res) => {
 
 
 })
+
+router.put("/updateuser/:id", async (req, res) => {
+    try {
+
+        const { name, email, phone, Proffesion, } = req.body
+        const User = await user.findByIdAndUpdate(req.params.id, { name, email, phone, work: Proffesion }, { new: true })
+        const data = await User.save()
+ 
+        res.status(200).send("data updated successfully")
+    } catch (error) {
+        res.status(400).send("something went wrong")
+    }
+})
+
+
 const mailer = (mail, otp) => {
     try {
 
