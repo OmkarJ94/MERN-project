@@ -6,7 +6,7 @@ const Authenticate = async (req, res, next) => {
     try {
 
         const token = req.cookies.jwt;
-        const verifyToken = jwt.verify(token, "Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful JavaScript plugins")
+        const verifyToken = jwt.verify(token, process.env.SECRET_KEY)
         const rootUser = await user.findOne({ _id: verifyToken._id, "tokens:token": token })
         if (!rootUser) {
             throw new Error("User Not Found")

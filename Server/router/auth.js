@@ -5,9 +5,9 @@ const jwt = require('jsonwebtoken');
 const otp = require("../models/Otp")
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
-
+const path = require("path");
 const user = require('../models/userSchema');
-
+const hbs = require('nodemailer-express-handlebars')
 
 
 const cookieParser = require("cookie-parser");
@@ -204,7 +204,7 @@ router.put("/updateuser/:id", async (req, res) => {
         const { name, email, phone, Proffesion, } = req.body
         const User = await user.findByIdAndUpdate(req.params.id, { name, email, phone, work: Proffesion }, { new: true })
         const data = await User.save()
- 
+
         res.status(200).send("data updated successfully")
     } catch (error) {
         res.status(400).send("something went wrong")
@@ -215,6 +215,7 @@ router.put("/updateuser/:id", async (req, res) => {
 const mailer = (mail, otp) => {
     try {
 
+
         let mailTransporter = nodemailer.createTransport({
             service: 'gmail',
 
@@ -224,20 +225,33 @@ const mailer = (mail, otp) => {
             }
         });
 
+        mailTransporter.use('compile', hbs({
+            viewEngine: {
+                extname: ".handlebars",
+                partialsDir: path.resolve('./views'),
+                defaultLayout: false
+            },
+
+            viewPath: path.resolve('./views'),
+            extname: ".handlebars",
+        }))
         let mailDetails = {
             from: process.env.EMAIL,
             to: mail,
-            subject: 'Email For Forgot Password',
-            text: `Your OTP for changing password is ${otp}`
+            subject:"OTP for Chnaging Password",
+            template: 'index',
+            context: {
+                otp
+            }
         };
 
         mailTransporter.sendMail(mailDetails, function (err, data) {
 
             if (err) {
-
+                console.log(err)
 
             } else {
-
+                console.log(data)
             }
         })
     } catch (error) {
